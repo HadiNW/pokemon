@@ -33,12 +33,18 @@ a {
 	text-decoration: none;
 }
 
+li {
+	list-style: none;
+}
+
 // components styles
 @import './components/layout.scss';
 @import './components/header.scss';
 @import './components/pokemon-list.scss';
 @import './components/pokemon-card.scss';
+@import './components/catch-modal.scss';
 
 // pages styles
 
 @import './pages/home.scss';
+@import './pages/pokemon-detail.scss';
