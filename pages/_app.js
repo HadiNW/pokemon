@@ -1,6 +1,7 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
 import Layout from '../components/Layout'
+import { PokemonListProvider } from '../store/pokemon-list-context';
 import '../styles/globals.scss'
 
 const client = new ApolloClient({
@@ -31,11 +32,13 @@ const client = new ApolloClient({
 
 function MyApp({ Component, pageProps }) {
   return (
+	<PokemonListProvider>
 	<ApolloProvider client={client}>
 		<Layout>
 			<Component {...pageProps} />
 		</Layout>
 	</ApolloProvider>
+	</PokemonListProvider>
   )
 }
 
