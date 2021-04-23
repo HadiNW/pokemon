@@ -17,7 +17,7 @@ const POKEMON_LIST = `
 	}
 `
 
-const Home = () => {
+const MyPokemon = () => {
 	
 	const ctx = useContext(PokemonListContext)
 
@@ -38,4 +38,4 @@ const Home = () => {
 	)
 }
 
-export default Home
+export default MyPokemon

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/router'
-import CatchModal from '../../components/Modals/Catch-Modal'
+
+import CatchModal from '../../components/modals/Catch-Modal.jsx'
 
 import axios from '../../lib/axios'
+import CatchFailed from '../../components/modals/Catch-Failed.jsx'
 
 const POKEMON_DETAIL = `
 	query($name: String!) {
@@ -30,6 +32,7 @@ const PokemonDetail = () => {
 	const [openModal, setOpenModal] = useState(false)
 	const [pokemonDetail, setPokemonDetail] = useState({})
 	const [isLoading, setIsloading] = useState(false)
+	const [catchFailed, setCatchFailed] = useState(false)
 
 	const router = useRouter()
 
@@ -48,10 +51,62 @@ const PokemonDetail = () => {
 		setPokemonDetail(data.data.pokemon)
 	}
 
-	const catchPokemon = (pokemonName) => {
-		console.log(pokemonName)
+	const getProbability = () => {
+		return !!0.5 && Math.random() <= 0.5
+	}
+
+	const catchPokemon = () => {
+		const success = getProbability()
+		console.log(success, 'succ')
+		if (!success) {
+			setCatchFailed(true)
+		} else {
+			setOpenModal(true)
+		}
+	}
+
+	const savePokemon = (pokemon) => {
 		setOpenModal(false)
-		router.push('/my-pokemon')
+		let myPokemons = JSON.parse(localStorage.getItem('my-pokemons'))
+
+		// Check if there is an Array in localstorage
+		if (myPokemons) {
+			const index = myPokemons.findIndex(
+				(myPok) => myPok.originalName === pokemon.originalName,
+			)
+			// check if pokemon exists in my list
+			if (index !== -1) {
+				const newPokemon = { ...myPokemons[index] }
+				newPokemon.qty = newPokemon.qty + 1
+				newPokemon.names = [...newPokemon.names, pokemon.customName]
+
+				// update the list of my pokemons
+				myPokemons[index] = newPokemon
+
+				// ownedPokemon.qty = ownedPokemon.qty + 1
+				// ownedPokemon.names = [...ownedPokemon.names, pokemon.customName]
+				// myPokemons = [...myPokemons, ownedPokemon]
+			} else {
+				const newPokemon = {
+					originalName: pokemon.originalName,
+					qty: 1,
+					names: [pokemon.customName],
+				}
+				// pokemon.qty = 1
+				// myPokemons = [...myPokemons, pokemon]
+				// ownedPokemon.qty = 1
+				myPokemons = [...myPokemons, newPokemon]
+			}
+		} else {
+			const newPokemon = {
+				originalName: pokemon.originalName,
+				qty: 1,
+				names: [pokemon.customName],
+			}
+
+			myPokemons = [newPokemon]
+		}
+		localStorage.setItem('my-pokemons', JSON.stringify(myPokemons))
 	}
 
 	useEffect(() => {
@@ -67,7 +122,11 @@ const PokemonDetail = () => {
 	return (
 		<div className='pokemon-detail'>
 			<div className='pokemon-detail-card'>
-				<img className='pokemon-image' src={pokemonDetail.sprites?.front_default} alt='' />
+				<img
+					className='pokemon-image'
+					src={pokemonDetail.sprites?.front_default}
+					alt=''
+				/>
 				<h2 className='pokemon-name'>{pokemonDetail.name}</h2>
 				<div className='line'></div>
 				<div className='container'>
@@ -88,14 +147,21 @@ const PokemonDetail = () => {
 						</ul>
 					</div>
 				</div>
-				<button onClick={() => setOpenModal(true)} className='button'>
+				<button onClick={catchPokemon} className='button'>
 					Catch Pokemon
 				</button>
 			</div>
+
 			{openModal && (
 				<CatchModal
 					setOpenModal={setOpenModal}
-					catchPokemon={catchPokemon}
+					savePokemon={savePokemon}
+					pokemon={pokemonDetail}
+				/>
+			)}
+			{catchFailed && (
+				<CatchFailed
+					setCatchFailed={setCatchFailed}
 					pokemon={pokemonDetail}
 				/>
 			)}
