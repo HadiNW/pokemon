@@ -68,20 +68,21 @@ const PokemonDetail = () => {
 
 	const savePokemon = (pokemon) => {
 		let myPokemons = JSON.parse(localStorage.getItem('my-pokemons'))
-		console.log('saving', pokemon)
+
 		if (!pokemon.customName) {
 			setError('Please fill the nick name')
 			return
 		}
+
 		// Check if there is an Array in localstorage
 		if (myPokemons) {
 			const index = myPokemons.findIndex(
 				(myPok) => myPok.originalName === pokemon.originalName,
 			)
+
 			// check if pokemon exists in my list
 			if (index !== -1) {
 				const newPokemon = { ...myPokemons[index] }
-				newPokemon.qty = newPokemon.qty + 1
 
 				// check if nick name already used
 				const used = newPokemon.names.find(
@@ -99,7 +100,6 @@ const PokemonDetail = () => {
 			} else {
 				const newPokemon = {
 					originalName: pokemon.originalName,
-					qty: 1,
 					image: pokemon.image,
 					names: [pokemon.customName],
 				}
@@ -109,13 +109,11 @@ const PokemonDetail = () => {
 		} else {
 			const newPokemon = {
 				originalName: pokemon.originalName,
-				qty: 1,
 				image: pokemon.image,
 				names: [pokemon.customName],
 			}
 
 			myPokemons = [newPokemon]
-			console.log({ newPokemon })
 		}
 
 		localStorage.setItem('my-pokemons', JSON.stringify(myPokemons))

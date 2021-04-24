@@ -1,21 +1,8 @@
-import { useEffect, useState, useCallback, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 
-import PokemonListContext, { PokemonListProvider } from '../store/pokemon-list-context'
+import PokemonListContext from '../store/pokemon-list-context'
 
 import PokemonList from '../components/Pokemon-List'
-
-const POKEMON_LIST = `
-	query($limit: Int, $offset: Int) {
-		pokemons(limit: $limit, offset: $offset) {
-			results {
-				id
-				name
-				image
-			}
-			next
-		}
-	}
-`
 
 const Home = () => {
 

@@ -1,30 +1,43 @@
-import { useEffect, useState, useCallback, useContext } from 'react'
-
-import PokemonListContext, {
-	PokemonListProvider,
-} from '../store/pokemon-list-context'
+import { useEffect, useState } from 'react'
 
 import PokemonList from '../components/Pokemon-List'
-
-const POKEMON_LIST = `
-	query($limit: Int, $offset: Int) {
-		pokemons(limit: $limit, offset: $offset) {
-			results {
-				id
-				name
-				image
-			}
-			next
-		}
-	}
-`
 
 const MyPokemon = () => {
 	const [myPokemons, setMyPokemons] = useState()
 
-	const releasePokemon = (name) => {
-		const myPokemons = JSON.parse(localStorage.getItem('my-pokemons'))
-		console.log({myPokemons})
+	const releasePokemon = (pokemon) => {
+		const newPokemons = myPokemons.filter(
+			(myPokemon) =>
+				myPokemon.name !== pokemon.name ||
+				myPokemon.originalName !== pokemon.originalName,
+		)
+		setMyPokemons(newPokemons)
+
+		// write to local storage
+		const obj = {}
+		for (let i = 0; i < newPokemons.length; i++) {
+			console.log('FIRST', obj)
+			const data = newPokemons[i]
+			obj[data.originalName] = {
+				originalName: data.originalName,
+				image: data.image,
+				names: obj[data.originalName]
+					? [...obj[data.originalName].names, data.name]
+					: [data.name],
+			}
+		}
+
+		const result = []
+		for (let i in obj) {
+			result.push({
+				originalName: obj[i].originalName,
+				image: obj[i].image,
+				names: obj[i].names,
+			})
+		}
+
+		// write to local storage
+		localStorage.setItem('my-pokemons', JSON.stringify(result))
 	}
 
 	useEffect(() => {
@@ -38,10 +51,11 @@ const MyPokemon = () => {
 						name: name,
 						image: pokemon.image,
 						originalName: pokemon.originalName,
-						qty: pokemon.qty,
 					})
 				})
 			})
+
+			console.log(results, 'res')
 
 			setMyPokemons(results)
 		}
@@ -49,7 +63,12 @@ const MyPokemon = () => {
 
 	return (
 		<div className='home-page'>
-			<PokemonList type='release' title='MY POKEMON' pokemons={myPokemons} releasePokemon={releasePokemon} />
+			<PokemonList
+				type='release'
+				title='MY POKEMON'
+				pokemons={myPokemons}
+				releasePokemon={releasePokemon}
+			/>
 		</div>
 	)
 }

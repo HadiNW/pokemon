@@ -45,7 +45,7 @@ export const PokemonListProvider = props => {
 				const owned = myPokemons.find(myPokemon => myPokemon.originalName === pokemon.name)
 				console.log(owned, 'oww')
 				if (owned) {
-					pokemon.owned = owned.qty
+					pokemon.owned = owned.names.length
 				} else {
 					pokemon.owned = 0
 				}

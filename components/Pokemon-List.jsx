@@ -15,15 +15,19 @@ const PokemonList = ({
 			<h2 className='title'>{title}</h2>
 			<div className='inner-list'>
 				{pokemons?.map((pokemon, i) => (
-					<PokemonCard key={pokemon.name} pokemon={pokemon} type={type} />
+					<PokemonCard key={pokemon.name + i} pokemon={pokemon} type={type} releasePokemon={releasePokemon} />
 				))}
-				{type === 'owned' && <>
-					{fetchMoreLoading ? (
-						<p>Loading ....</p>
-					) : (
-						<p onClick={() => fetchMore(nextUrl)}>loadmore</p>
-					)}
-				</>}
+			</div>
+			<div className='loadmore'>
+				{type === 'owned' && (
+					<>
+						{fetchMoreLoading ? (
+							<p>Loading ....</p>
+						) : (
+							<p onClick={() => fetchMore(nextUrl)}>loadmore</p>
+						)}
+					</>
+				)}
 			</div>
 		</div>
 	)

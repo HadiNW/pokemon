@@ -4,9 +4,9 @@ import Header from './Header'
 const Layout = (props) => {
 	return (
 		<>
-		<img className='background-page' src="/assets/background.png" alt=""/>
-		<Header />
-		{props.children}
+			<img className='background-page' src='/assets/background.png' alt='' />
+			<Header />
+			{props.children}
 		</>
 	)
 }

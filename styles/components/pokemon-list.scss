@@ -14,7 +14,15 @@
 		grid-gap: 1.6rem;
 		grid-auto-rows: 13.2rem;
 		overflow-y: scroll;
-		height: calc(100vh - 20.4rem);
+		height: calc(100vh - 24.4rem);
+	}
+
+	.loadmore {
+		height: 3rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 1rem;
 	}
 
 	.title {
