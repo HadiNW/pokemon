@@ -18,7 +18,7 @@ const POKEMON_LIST = `
 `
 
 const Home = () => {
-	
+
 	const ctx = useContext(PokemonListContext)
 
 	useEffect(() => {
@@ -29,6 +29,8 @@ const Home = () => {
 	return (
 			<div className='home-page'>
 				<PokemonList
+					type='owned'
+					title='POKEMON LIST'
 					pokemons={ctx.pokemonList}
 					fetchMore={ctx.fetchMore}
 					fetchMoreLoading={ctx.fetchMoreLoading}

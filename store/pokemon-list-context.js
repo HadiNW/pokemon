@@ -25,8 +25,8 @@ const PokemonListContext = createContext({
 })
 
 export const PokemonListProvider = props => {
-	const [pokemonList, setPokemonList] = useState()
-	const [nextUrl, setNextUrl] = useState()
+	const [pokemonList, setPokemonList] = useState([])
+	const [nextUrl, setNextUrl] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
 	const [fetchMoreLoading, setFetchMoreLoading] = useState(false)
 
@@ -36,8 +36,25 @@ export const PokemonListProvider = props => {
 		const { data } = await axios.post('/', {
 			query: POKEMON_LIST,
 		})
+		let pokemons = data.data.pokemons.results
+		const myPokemons = JSON.parse(localStorage.getItem('my-pokemons'))
 
-		setPokemonList(data.data.pokemons.results)
+		// Check if user has pokemon
+		if (myPokemons) {
+			pokemons = data.data.pokemons.results.map(pokemon => {
+				const owned = myPokemons.find(myPokemon => myPokemon.originalName === pokemon.name)
+				console.log(owned, 'oww')
+				if (owned) {
+					pokemon.owned = owned.qty
+				} else {
+					pokemon.owned = 0
+				}
+				
+				return pokemon
+			})
+		}
+		
+		setPokemonList(pokemons)
 		setNextUrl(data.data.pokemons.next)
 
 		setIsLoading(false)

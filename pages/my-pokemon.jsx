@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback, useContext } from 'react'
 
-import PokemonListContext, { PokemonListProvider } from '../store/pokemon-list-context'
+import PokemonListContext, {
+	PokemonListProvider,
+} from '../store/pokemon-list-context'
 
 import PokemonList from '../components/Pokemon-List'
 
@@ -18,23 +20,37 @@ const POKEMON_LIST = `
 `
 
 const MyPokemon = () => {
-	
-	const ctx = useContext(PokemonListContext)
+	const [myPokemons, setMyPokemons] = useState()
+
+	const releasePokemon = (name) => {
+		const myPokemons = JSON.parse(localStorage.getItem('my-pokemons'))
+		console.log({myPokemons})
+	}
 
 	useEffect(() => {
-		console.log('effect', ctx)
-		ctx.getPokemonList()
+		const myPokemons = JSON.parse(localStorage.getItem('my-pokemons'))
+		if (myPokemons) {
+			const results = []
+
+			myPokemons.forEach((pokemon) => {
+				pokemon.names.forEach((name) => {
+					results.push({
+						name: name,
+						image: pokemon.image,
+						originalName: pokemon.originalName,
+						qty: pokemon.qty,
+					})
+				})
+			})
+
+			setMyPokemons(results)
+		}
 	}, [])
 
 	return (
-			<div className='home-page'>
-				<PokemonList
-					pokemons={ctx.pokemonList}
-					fetchMore={ctx.fetchMore}
-					fetchMoreLoading={ctx.fetchMoreLoading}
-					nextUrl={ctx.nextUrl}
-				/>
-			</div>
+		<div className='home-page'>
+			<PokemonList type='release' title='MY POKEMON' pokemons={myPokemons} releasePokemon={releasePokemon} />
+		</div>
 	)
 }
 

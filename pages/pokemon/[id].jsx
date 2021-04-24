@@ -33,6 +33,7 @@ const PokemonDetail = () => {
 	const [pokemonDetail, setPokemonDetail] = useState({})
 	const [isLoading, setIsloading] = useState(false)
 	const [catchFailed, setCatchFailed] = useState(false)
+	const [error, setError] = useState()
 
 	const router = useRouter()
 
@@ -66,9 +67,12 @@ const PokemonDetail = () => {
 	}
 
 	const savePokemon = (pokemon) => {
-		setOpenModal(false)
 		let myPokemons = JSON.parse(localStorage.getItem('my-pokemons'))
-
+		console.log('saving', pokemon)
+		if (!pokemon.customName) {
+			setError('Please fill the nick name')
+			return
+		}
 		// Check if there is an Array in localstorage
 		if (myPokemons) {
 			const index = myPokemons.findIndex(
@@ -78,35 +82,44 @@ const PokemonDetail = () => {
 			if (index !== -1) {
 				const newPokemon = { ...myPokemons[index] }
 				newPokemon.qty = newPokemon.qty + 1
-				newPokemon.names = [...newPokemon.names, pokemon.customName]
+
+				// check if nick name already used
+				const used = newPokemon.names.find(
+					(name) => name === pokemon.customName,
+				)
+				if (used) {
+					setError('Nick name already used!')
+					return
+				} else {
+					newPokemon.names = [...newPokemon.names, pokemon.customName]
+				}
 
 				// update the list of my pokemons
 				myPokemons[index] = newPokemon
-
-				// ownedPokemon.qty = ownedPokemon.qty + 1
-				// ownedPokemon.names = [...ownedPokemon.names, pokemon.customName]
-				// myPokemons = [...myPokemons, ownedPokemon]
 			} else {
 				const newPokemon = {
 					originalName: pokemon.originalName,
 					qty: 1,
+					image: pokemon.image,
 					names: [pokemon.customName],
 				}
-				// pokemon.qty = 1
-				// myPokemons = [...myPokemons, pokemon]
-				// ownedPokemon.qty = 1
+
 				myPokemons = [...myPokemons, newPokemon]
 			}
 		} else {
 			const newPokemon = {
 				originalName: pokemon.originalName,
 				qty: 1,
+				image: pokemon.image,
 				names: [pokemon.customName],
 			}
 
 			myPokemons = [newPokemon]
+			console.log({ newPokemon })
 		}
+
 		localStorage.setItem('my-pokemons', JSON.stringify(myPokemons))
+		setOpenModal(false)
 	}
 
 	useEffect(() => {
@@ -157,13 +170,11 @@ const PokemonDetail = () => {
 					setOpenModal={setOpenModal}
 					savePokemon={savePokemon}
 					pokemon={pokemonDetail}
+					error={error}
 				/>
 			)}
 			{catchFailed && (
-				<CatchFailed
-					setCatchFailed={setCatchFailed}
-					pokemon={pokemonDetail}
-				/>
+				<CatchFailed setCatchFailed={setCatchFailed} pokemon={pokemonDetail} />
 			)}
 		</div>
 	)

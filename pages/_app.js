@@ -1,45 +1,23 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import Router from "next/router";
+import NProgress from 'nprogress'
 
 import Layout from '../components/Layout'
-import { PokemonListProvider } from '../store/pokemon-list-context';
+import { PokemonListProvider } from '../store/pokemon-list-context'
+
 import '../styles/globals.scss'
 
-const client = new ApolloClient({
-  uri: 'https://graphql-pokeapi.vercel.app/api/graphql',
-  cache: new InMemoryCache({
-	  typePolicies: {
-		Query: {
-		  fields: {
-			pokemons: {
-			  // Don't cache separate results based on
-			  // any of this field's arguments.
-			  keyArgs: false,
-			  // Concatenate the incoming list items with
-			  // the existing list items.
-			  merge(existing = { results: [] }, incoming) {
-				  return {
-					  ...existing,
-					  ...incoming,
-					  results: [...existing.results, ...incoming.results]
-				  }
-			  },
-			}
-		  }
-		}
-	  }
-  }),
-});
+Router.events.on('routeChangeStart', NProgress.start)
+Router.events.on("routeChangeComplete", NProgress.done);
+Router.events.on("routeChangeError", NProgress.done);
 
 function MyApp({ Component, pageProps }) {
-  return (
-	<PokemonListProvider>
-	<ApolloProvider client={client}>
-		<Layout>
-			<Component {...pageProps} />
-		</Layout>
-	</ApolloProvider>
-	</PokemonListProvider>
-  )
+	return (
+		<PokemonListProvider>
+			<Layout>
+				<Component {...pageProps} />
+			</Layout>
+		</PokemonListProvider>
+	)
 }
 
 export default MyApp
