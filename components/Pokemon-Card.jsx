@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router'
 
 import Link from 'next/link'
+import ReleaseModal from './modals/Release-Modal'
 
-const PokemonCard = ({ pokemon, type, releasePokemon }) => {
+const PokemonCard = ({ pokemon, type, handleRelease }) => {
 	const router = useRouter()
 
 	const LinkWrap = (props) => (
@@ -12,12 +13,13 @@ const PokemonCard = ({ pokemon, type, releasePokemon }) => {
 	if (type === 'release') {
 		return (
 			<>
-			<div className='pokemon-card'>
-				<img className='pokemon-image' src={pokemon.image} alt='poke image' />
-				<p>{pokemon.originalName}</p>
-				<p>{pokemon.name}</p>
-				<button className='release' onClick={() => releasePokemon(pokemon)}>Release Pokemon</button>
-			</div>
+				<div className='pokemon-card'>
+					<img className='pokemon-image' src={pokemon.image} alt='poke image' />
+					<p>{pokemon.name}</p>
+					<button className='release' onClick={() => handleRelease(pokemon)}>
+						Release Pokemon
+					</button>
+				</div>
 			</>
 		)
 	}

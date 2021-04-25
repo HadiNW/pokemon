@@ -43,6 +43,8 @@ li {
 @import './components/pokemon-list.scss';
 @import './components/pokemon-card.scss';
 @import './components/catch-modal.scss';
+@import './components/spinner.scss';
+@import './components/release-modal.scss';
 
 // pages styles
 
@@ -55,7 +57,7 @@ li {
   }
   
   #nprogress .bar {
-	background: red;
+	background: #ff985f;
 	position: fixed;
 	z-index: 1031;
 	top: 0;
@@ -72,7 +74,7 @@ li {
 	right: 0px;
 	width: 100px;
 	height: 100%;
-	box-shadow: 0 0 10px red, 0 0 5px red;
+	box-shadow: 0 0 10px #ff985f 0 0 5px #ff985f;
 	opacity: 1.0;
   
 	-webkit-transform: rotate(3deg) translate(0px, -4px);
@@ -95,8 +97,8 @@ li {
 	box-sizing: border-box;
   
 	border: solid 2px transparent;
-	border-top-color: red;
-	border-left-color: red;
+	border-top-color: #ff985f;;
+	border-left-color: #ff985f;;
 	border-radius: 50%;
   
 	-webkit-animation: nprogress-spinner 400ms linear infinite;

@@ -3,6 +3,7 @@ import { useEffect, useContext } from 'react'
 import PokemonListContext from '../store/pokemon-list-context'
 
 import PokemonList from '../components/Pokemon-List'
+import Spinner from '../components/Spinner'
 
 const Home = () => {
 
@@ -13,6 +14,9 @@ const Home = () => {
 		ctx.getPokemonList()
 	}, [])
 
+	if (ctx.isLoading) {
+		return <Spinner />
+	}
 	return (
 			<div className='home-page'>
 				<PokemonList
@@ -22,6 +26,7 @@ const Home = () => {
 					fetchMore={ctx.fetchMore}
 					fetchMoreLoading={ctx.fetchMoreLoading}
 					nextUrl={ctx.nextUrl}
+					isLoading={ctx.isLoading}
 				/>
 			</div>
 	)

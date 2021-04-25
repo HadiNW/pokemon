@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react'
+import ReleaseModal from '../components/modals/Release-Modal'
 
 import PokemonList from '../components/Pokemon-List'
 
 const MyPokemon = () => {
 	const [myPokemons, setMyPokemons] = useState()
+	const [openConfirmation, setOpenConfirmation] = useState(false)
+	const [pokemon, setPokemon] = useState(false)
+
+	const handleRelease = (pokemon) => {
+		setPokemon(pokemon)
+		setOpenConfirmation(true)
+	}
 
 	const releasePokemon = (pokemon) => {
 		const newPokemons = myPokemons.filter(
@@ -38,6 +46,8 @@ const MyPokemon = () => {
 
 		// write to local storage
 		localStorage.setItem('my-pokemons', JSON.stringify(result))
+
+		setOpenConfirmation(false)
 	}
 
 	useEffect(() => {
@@ -62,14 +72,23 @@ const MyPokemon = () => {
 	}, [])
 
 	return (
-		<div className='home-page'>
-			<PokemonList
-				type='release'
-				title='MY POKEMON'
-				pokemons={myPokemons}
-				releasePokemon={releasePokemon}
-			/>
-		</div>
+		<>
+			<div className='home-page'>
+				<PokemonList
+					type='release'
+					title='MY POKEMON'
+					pokemons={myPokemons}
+					handleRelease={handleRelease}
+				/>
+			</div>
+			{openConfirmation && (
+				<ReleaseModal
+					pokemon={pokemon}
+					close={() => setOpenConfirmation(false)}
+					continueRelease={() => releasePokemon(pokemon)}
+				/>
+			)}
+		</>
 	)
 }
 

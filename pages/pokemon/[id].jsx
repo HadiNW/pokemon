@@ -6,6 +6,7 @@ import CatchModal from '../../components/modals/Catch-Modal.jsx'
 
 import axios from '../../lib/axios'
 import CatchFailed from '../../components/modals/Catch-Failed.jsx'
+import Spinner from '../../components/Spinner.jsx'
 
 const POKEMON_DETAIL = `
 	query($name: String!) {
@@ -57,13 +58,15 @@ const PokemonDetail = () => {
 	}
 
 	const catchPokemon = () => {
+
 		const success = getProbability()
-		console.log(success, 'succ')
+
 		if (!success) {
 			setCatchFailed(true)
 		} else {
 			setOpenModal(true)
 		}
+		
 	}
 
 	const savePokemon = (pokemon) => {
@@ -121,13 +124,14 @@ const PokemonDetail = () => {
 	}
 
 	useEffect(() => {
+		console.log('effect')
 		if (router.isReady) {
 			getPokemonDetail()
 		}
 	}, [pokemonName])
 
 	if (isLoading) {
-		return <p>Loading ....</p>
+		return <Spinner />
 	}
 
 	return (
@@ -144,7 +148,7 @@ const PokemonDetail = () => {
 					<div className='content'>
 						<p>Moves : </p>
 						<ul className='moves'>
-							{pokemonDetail.moves?.splice(0, 4).map(({ move }) => (
+							{pokemonDetail.moves?.slice(0, 4).map(({ move }) => (
 								<li key={move.name}>{move.name}</li>
 							))}
 						</ul>
@@ -152,7 +156,7 @@ const PokemonDetail = () => {
 					<div className='content'>
 						<p>Types :</p>
 						<ul className='moves'>
-							{pokemonDetail.types?.splice(0, 4).map(({ type }) => (
+							{pokemonDetail.types?.slice(0, 4).map(({ type }) => (
 								<li key={type.name}>{type.name}</li>
 							))}
 						</ul>

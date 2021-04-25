@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
 import PokemonCard from './Pokemon-Card'
+import Spinner from './Spinner'
 
 const PokemonList = ({
 	pokemons,
@@ -8,23 +8,26 @@ const PokemonList = ({
 	nextUrl,
 	title,
 	type,
-	releasePokemon,
+	handleRelease,
+	isLoading
 }) => {
+
 	return (
 		<div className='pokemon-list'>
 			<h2 className='title'>{title}</h2>
 			<div className='inner-list'>
+				{!pokemons?.length && !isLoading && <p className='no-data'>No Data</p>}
 				{pokemons?.map((pokemon, i) => (
-					<PokemonCard key={pokemon.name + i} pokemon={pokemon} type={type} releasePokemon={releasePokemon} />
+					<PokemonCard key={pokemon.name + i} pokemon={pokemon} type={type} handleRelease={handleRelease} />
 				))}
 			</div>
 			<div className='loadmore'>
 				{type === 'owned' && (
 					<>
 						{fetchMoreLoading ? (
-							<p>Loading ....</p>
+							<Spinner />
 						) : (
-							<p onClick={() => fetchMore(nextUrl)}>loadmore</p>
+							<button className='btn-loadmore' onClick={() => fetchMore(nextUrl)}>Load More</button>
 						)}
 					</>
 				)}
