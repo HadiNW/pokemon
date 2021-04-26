@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import ReleaseModal from '../components/modals/Release-Modal'
 
+import Head from 'next/head'
+
+import ReleaseModal from '../components/modals/Release-Modal'
 import PokemonList from '../components/Pokemon-List'
 
 const MyPokemon = () => {
@@ -73,6 +75,9 @@ const MyPokemon = () => {
 
 	return (
 		<>
+			<Head>
+				<title>Pokemon | My Pokemon</title>
+			</Head>
 			<div className='home-page'>
 				<PokemonList
 					type='release'

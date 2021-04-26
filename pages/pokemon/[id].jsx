@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 
 import { useRouter } from 'next/router'
 
@@ -58,7 +59,6 @@ const PokemonDetail = () => {
 	}
 
 	const catchPokemon = () => {
-
 		const success = getProbability()
 
 		if (!success) {
@@ -66,7 +66,6 @@ const PokemonDetail = () => {
 		} else {
 			setOpenModal(true)
 		}
-		
 	}
 
 	const savePokemon = (pokemon) => {
@@ -121,6 +120,7 @@ const PokemonDetail = () => {
 
 		localStorage.setItem('my-pokemons', JSON.stringify(myPokemons))
 		setOpenModal(false)
+		router.push('/my-pokemon')
 	}
 
 	useEffect(() => {
@@ -135,50 +135,58 @@ const PokemonDetail = () => {
 	}
 
 	return (
-		<div className='pokemon-detail'>
-			<div className='pokemon-detail-card'>
-				<img
-					className='pokemon-image'
-					src={pokemonDetail.sprites?.front_default}
-					alt=''
-				/>
-				<h2 className='pokemon-name'>{pokemonDetail.name}</h2>
-				<div className='line'></div>
-				<div className='container'>
-					<div className='content'>
-						<p>Moves : </p>
-						<ul className='moves'>
-							{pokemonDetail.moves?.slice(0, 4).map(({ move }) => (
-								<li key={move.name}>{move.name}</li>
-							))}
-						</ul>
+		<>
+			<Head>
+				<title>Pokemon | {pokemonDetail.name}</title>
+			</Head>
+			<div className='pokemon-detail'>
+				<div className='pokemon-detail-card'>
+					<img
+						className='pokemon-image'
+						src={pokemonDetail.sprites?.front_default}
+						alt=''
+					/>
+					<h2 className='pokemon-name'>{pokemonDetail.name}</h2>
+					<div className='line'></div>
+					<div className='container'>
+						<div className='content'>
+							<p>Moves : </p>
+							<ul className='moves'>
+								{pokemonDetail.moves?.slice(0, 4).map(({ move }) => (
+									<li key={move.name}>{move.name}</li>
+								))}
+							</ul>
+						</div>
+						<div className='content'>
+							<p>Types :</p>
+							<ul className='moves'>
+								{pokemonDetail.types?.slice(0, 4).map(({ type }) => (
+									<li key={type.name}>{type.name}</li>
+								))}
+							</ul>
+						</div>
 					</div>
-					<div className='content'>
-						<p>Types :</p>
-						<ul className='moves'>
-							{pokemonDetail.types?.slice(0, 4).map(({ type }) => (
-								<li key={type.name}>{type.name}</li>
-							))}
-						</ul>
-					</div>
+					<button onClick={catchPokemon} className='button'>
+						Catch Pokemon
+					</button>
 				</div>
-				<button onClick={catchPokemon} className='button'>
-					Catch Pokemon
-				</button>
-			</div>
 
-			{openModal && (
-				<CatchModal
-					setOpenModal={setOpenModal}
-					savePokemon={savePokemon}
-					pokemon={pokemonDetail}
-					error={error}
-				/>
-			)}
-			{catchFailed && (
-				<CatchFailed setCatchFailed={setCatchFailed} pokemon={pokemonDetail} />
-			)}
-		</div>
+				{openModal && (
+					<CatchModal
+						setOpenModal={setOpenModal}
+						savePokemon={savePokemon}
+						pokemon={pokemonDetail}
+						error={error}
+					/>
+				)}
+				{catchFailed && (
+					<CatchFailed
+						setCatchFailed={setCatchFailed}
+						pokemon={pokemonDetail}
+					/>
+				)}
+			</div>
+		</>
 	)
 }
 
